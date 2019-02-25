@@ -15,9 +15,11 @@ Predicting behaviors based on brain data using collaborative filtering
 * data/raw_data: Neurosynth package로 다운로드된 raw data. 논문 별 activation 데이터.
 * data/anatomical.nii: Brain anatomical structure 파일.
 
-## 3. 크롤링된 데이터 => (Brain Voxel X Keyword) 매트릭스 변환
-* create_brain_behav_matrix.py: 매트릭스 변환해서 results 폴더에 저장 (메모리 문제 때문에 실행이 안됨 ㅠㅠ)
+# 해결해야 할 문제
 
-# 코딩해야할 내용
+## 3. 크롤링된 데이터 => (Brain Voxel X Keyword) 매트릭스 변환 (메모리 부족 때문에 안돌아감 ㅠㅠ)
+* create_brain_behav_matrix.py: 매트릭스 변환해서 results 폴더에 저장
+
+# 앞으로 코딩해야 할 내용
 ## 4. (Brain Voxel X Keyword) 매트릭스를 이용한 collaborative filtering
 ## 5. Cross-validation
