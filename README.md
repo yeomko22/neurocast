@@ -1,6 +1,9 @@
 # brain_factorization
 Predicting behaviors based on brain data using collaborative filtering
 
+* 데이터 폴더 링크
+  * https://drive.google.com/drive/folders/1UMAyO-aLaWzrGxJujKQgxAk94hJYe7j9?usp=sharing
+
 # 코딩된 내용
 ## 1. 데이터 크롤링
 * crawler/selenium/download_nii_files.py
