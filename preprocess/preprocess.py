@@ -58,6 +58,8 @@ def main():
     # set up basic path
     base_dir = os.path.abspath('../data')
     output_dir = os.path.join(base_dir, 'results')
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
 
     # read keyword file and extract keyword list
     keyword_file = csv.reader(open(os.path.join(base_dir, 'keyword_list.csv')))
