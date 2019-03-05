@@ -1,8 +1,12 @@
 # Brain Factorization
 Predicting unknown correlation between behavior and brain using matrix factorization methods.
 
+## Download references
+download papers from following link
+* https://drive.google.com/open?id=1WKoOp81hdGEnYmqAwpr4b5rURrjCK6YA
+
 ## Download data
-down load data from following link under /data and unzip
+download data from following link under /data and unzip
 * https://drive.google.com/drive/folders/1UMAyO-aLaWzrGxJujKQgxAk94hJYe7j9?usp=sharing
 * move unziped file into /data directory
 
