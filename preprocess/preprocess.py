@@ -13,6 +13,7 @@ def sort_data(output_dir, mtype):
 
     raw_data = csv.reader(open(raw_data_path, 'r'))
     sorted_data = csv.writer(open(sorted_data_path, 'w'))
+    sorted_data.writerow(['voxel_id', 'keyword', 'score'])
 
     data_list = []
     for i, row in enumerate(raw_data):
