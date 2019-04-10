@@ -1,30 +1,36 @@
 import csv
-
-import nibabel as nib
+import json
 import os
+
+import math
+import nibabel as nib
+from tqdm import tqdm
+
+from util import util
 
 
 # sort output csv file per voxel id (cluster same voxel id)
 # it makes easier to make the data into matrix format
-def sort_data(output_dir, mtype):
-    print('----- %s data sort start -----')
-    raw_data_path = os.path.join(output_dir, mtype + '.csv')
-    sorted_data_path = os.path.join(output_dir, mtype + '_sorted.csv')
+def sort_data(dir_name, cur_mode):
+    logger.info('{0} data sort start'.format(dir_name))
+
+    raw_data_path = os.path.join('../data/results', '%s_%s.csv' % (dir_name, cur_mode))
+    sorted_data_path = os.path.join('../data/results', '%s_%s_sorted.csv' % (dir_name, cur_mode))
 
     raw_data = csv.reader(open(raw_data_path, 'r'))
     sorted_data = csv.writer(open(sorted_data_path, 'w'))
-    sorted_data.writerow(['voxel_id', 'keyword', 'score'])
+    sorted_data.writerow(['keyword', 'voxel_id', 'score'])
 
     data_list = []
     for i, row in enumerate(raw_data):
+        if i==0:
+            continue
         data_list.append(row)
     data_list.sort()
 
     for data in data_list:
         sorted_data.writerow(data)
-    sorted_data.close()
-    raw_data.close()
-    print('----- %s data sort finish -----')
+    logger.info('{0} data sort finish'.format(dir_name))
     return sorted_data_path
 
 
@@ -37,25 +43,25 @@ def voxel_check(nib_data, output_csv, keyword):
                 if abs(nib_data[i][j][k]) != 0.0:
                     cur_id = '%d_%d_%d' % (i, j, k)
                     cur_score = nib_data[i][j][k]
-                    output_csv.writerow([cur_id, keyword, cur_score])
+                    output_csv.writerow([keyword, cur_id, cur_score])
 
 
 # read nii file per each keyword
 # request voxel_check per each nii file
-def process(base_dir, mtype, keyword_list, output_csv):
-    print('----- %s data process start -----' % mtype)
-    dir_name = 'keyword_%s_test' % mtype
-    for i, keyword in enumerate(keyword_list):
-        file_name = '%s_%s-test_z_FDR_0.01.nii.gz' % (keyword, mtype)
+def process(base_dir, dir_name, keyword_list, output_csv):
+    logger.info('{0} data process start'.format(dir_name))
+    for i, keyword in tqdm(enumerate(keyword_list), total=len(keyword_list)):
+        file_name = '%s.nii.gz' % keyword
         nib_file = nib.load(os.path.join(base_dir, dir_name, file_name))
         nib_data = nib_file.get_fdata()
         voxel_check(nib_data, output_csv, keyword)
-        print('%s process complete (%d/%d)' % (keyword, i, len(keyword_list)))
-    output_csv.close()
-    print('----- %s data process finish -----' % mtype)
+    logger.info('{0} data process finish'.format(dir_name))
 
 
 def main():
+    # read config
+    config = json.loads(open('../config.json', 'r').read())
+
     # set up basic path
     base_dir = os.path.abspath('../data')
     output_dir = os.path.join(base_dir, 'results')
@@ -63,7 +69,13 @@ def main():
         os.mkdir(output_dir)
 
     # read keyword file and extract keyword list
-    keyword_file = csv.reader(open(os.path.join(base_dir, 'keyword_list.csv')))
+    cur_mode = config['cur_mode']
+    if cur_mode == 'sample':
+        keyword_path = config['keyword_sample']
+    else:
+        keyword_path = config['keyword_origin']
+
+    keyword_file = csv.reader(open(keyword_path, 'r'))
     keyword_list = []
     for i, keyword_line in enumerate(keyword_file):
         if i == 0:
@@ -71,15 +83,15 @@ def main():
         keyword_list.append(keyword_line[1])
 
     # process data per measure type
-    measure_types = ['uniformity', 'association']
-    for mtype in measure_types:
-        output_path = os.path.join(output_dir, mtype + '.csv')
+    dir_names = ['train', 'test', 'total']
+    for dir_name in dir_names:
+        output_path = os.path.join(output_dir, '%s_%s.csv' % (dir_name, cur_mode))
         output_csv = csv.writer(open(output_path, 'w'))
-        output_csv.writerow(['voxel_id', 'keyword', 'score'])
-        process(base_dir, mtype, keyword_list, output_csv)
-        sorted_data_path = sort_data(output_dir, mtype)
-        print('final result: %s' % sorted_data_path)
-
+        output_csv.writerow(['keyword', 'voxel_id', 'score'])
+        process(base_dir, dir_name, keyword_list, output_csv)
+        sorted_data_path = sort_data(dir_name, cur_mode)
+        logger.info('final result: {0}'.format(sorted_data_path))
 
 if __name__ == '__main__':
+    logger = util.get_logger()
     main()

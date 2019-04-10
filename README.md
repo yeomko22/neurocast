@@ -14,12 +14,6 @@ download data from following link under /data and unzip
 ### How to use
 (currently only available in windows)
 
-crawler/selenium/download_nii_files.py
-* Download nii files from neurosynth.org using selenium and chrome driver
-```
-cd crawler/selenium
-python download_nii_files.py
-```
 crawler/neurosynth_package/download_raw_data.py
   * Download data using Neurosynth official package
 ```
@@ -31,6 +25,11 @@ python download_raw_data.py
 The crawled data can be downloaded from above google drive link.
 * data/keyword_list
   * List of 1335 behavior from Neurosynth
+* data/train
+* data/test
+* data/test2
+  * train: dataset until 2015, test: dataset after 2015, test2: overall dataset (1997~2019)
+  * data/uniformity_train, data/uniformity_test, data/uniformity_test2: extracted only uniformity test results
 * data/keyword_uniformity_test
   * nii file list which represent correlation between keyword - brain activation.  
   (downloaded by selenium crawler)
@@ -58,6 +57,8 @@ https://drive.google.com/drive/folders/1NDWWc4bBMuMSRmq8S4q8U2eHVXtPpzH_
 * data/result/uniformity_sorted.csv
 * data/result/association_sorted.csv
   * represent activation score per brain voxel coordinates and keyword.
+* results/coordinates_table.csv
+  * represent MNI coordinates and Shen's category (268) for each voxel
 * For more detail, see our wiki [link]
 
 
