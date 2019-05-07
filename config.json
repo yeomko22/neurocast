@@ -1,14 +1,26 @@
 {
-    "model": "als",
-    "feature_dim": 50,
-    "confidence-weight": 40,
-    "norm-lambda": 40,
-    "train_sample": "../data/results/train_sample.csv",
-    "test_sample": "../data/results/test_sample.csv",
-    "train_origin": "../data/results/train.csv",
-    "test_origin": "../data/results/test.csv",
-    "total_data": "../data/results/total.csv",
-    "keyword_sample": "../data/keyword_sample.csv",
-    "keyword_origin": "../data/keyword_origin.csv",
-    "cur_mode": "origin"
+    "model_params": {
+        "model_name": "als_atlas",
+        "model": "als",
+        "voxel_cluster_type": "atlas",
+        "feature_dim": 200,
+        "confidence_alpha": 40,
+        "norm_lambda": 40,
+        "validate_type": "kfold",
+        "validate_k": 4
+    },
+    "data_path": {
+        "train_sample": "../data/results/train_sample.csv",
+        "test_sample": "../data/results/test_sample.csv",
+        "train_origin": "../data/results/train.csv",
+        "test_origin": "../data/results/test.csv",
+        "total_data": "../data/results/total.csv",
+        "keyword_sample": "../data/keyword_sample.csv",
+        "keyword_origin": "../data/keyword_origin.csv"
+    },
+    "cur_mode": "origin",
+    "preprocess": {
+      "positive_limit": 10,
+      "binarize": true
+    }
 }

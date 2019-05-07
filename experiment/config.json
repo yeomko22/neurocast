@@ -1,0 +1,21 @@
+{
+    "data_path": {
+      "keyword_path": "../data/keyword_origin.csv",
+      "train": "../data/filtered_coordi/train_filtered.csv",
+      "test": "../data/filtered_coordi/test_filtered.csv",
+      "total": "../data/filtered_coordi/total_filtered.csv"
+    },
+    "model_params": {
+      "model": "als",
+      "feature_dim": 200,
+      "confidence_alpha": 40,
+      "norm_lambda": 40
+    },
+    "preprocess": {
+      "positive_limit": 10,
+      "binarize": true
+    },
+    "meta": {
+      "voxel_cluster_num": 268
+    }
+}

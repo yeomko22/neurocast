@@ -58,6 +58,46 @@ def process(base_dir, dir_name, keyword_list, output_csv):
     logger.info('{0} data process finish'.format(dir_name))
 
 
+def get_filtered_coordi_matrix(self, filepath):
+    # ingredients to make csr_matrix
+    indptr = [0]
+    indices = []
+    data = []
+
+    # meta data of csr_matrix
+    vocabulary = {}
+    region_id_set = set()
+
+    self.logger.info('start to read file: {0}'.format(filepath))
+    total_rows = self.get_num_lines(filepath)
+    self.logger.info('total rows of data: {0}'.format(total_rows))
+
+    self.logger.info('start to build csr_matrix')
+    file_csv = csv.reader(open(filepath, 'r'))
+    prev_region_id = None
+    for i, row in tqdm(enumerate(file_csv), total=total_rows):
+        if i == 0:
+            continue
+        if not prev_region_id:
+            prev_region_id = row[0]
+        region_id_set.add(row[0])
+        index = vocabulary.setdefault(row[1], len(vocabulary))
+        indices.append(index)
+        data.append(row[2])
+
+        if row[0] != prev_region_id:
+            indptr.append(i - 1)
+            prev_region_id = row[0]
+
+    retion_id_list = list(region_id_set)
+    retion_id_list.sort()
+
+    nii_csr_matrix = csr_matrix((data, indices, indptr), dtype=int)
+
+    # if you want data in binary form
+    self.binary_preprocess(nii_csr_matrix)
+    return retion_id_list, nii_csr_matrix, vocabulary
+
 def main():
     # read config
     config = json.loads(open('../config.json', 'r').read())

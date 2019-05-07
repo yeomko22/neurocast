@@ -1,6 +1,6 @@
 import csv
 import os
-
+import pandas as pd
 
 def make_sample():
     org_csv = csv.reader(open('../data/preprocessed/test.csv', 'r'))
@@ -51,8 +51,25 @@ def find_missed_voxel():
     for voxel_id in missing_voxel_list:
         missing_voxel_csv.writerow([voxel_id])
 
+class voxel_cluster:
+    def __init__(self, voxel_id):
+        self.voxel_count = 1
+        self.voxel_id = voxel_id
+
+    def __le__(self, other):
+        return self.voxel_id > other.voxel_id
+
+def count_coordinate_table():
+    df = pd.read_csv('../data/coordi_org.csv')
+    df_grouped = df.groupby('shen_regionid').count()
+    df_grouped = df_grouped.drop(columns=['mni_x', 'mni_y', 'mni_z'])
+    df_grouped.to_csv('coordi_voxel_count.csv')
+    print(df_grouped)
+
 
 if __name__ == '__main__':
     # find_missed_voxel()
     # count_org_data()
-    make_sample()
+    # make_sample()
+    count_coordinate_table()
+
